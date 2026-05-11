@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Tableau de Bord - BU Gestion</title>
+    <style>
+        .stat-card {
+            border-radius: 15px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark">Tableau de Bord</h2>
+        <p class="text-muted">Bienvenue sur votre espace de gestion bibliothécaire.</p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- Total Books -->
+        <div class="col-md-3">
+            <div class="card h-100 border-0">
+                <div class="card-body p-4">
+                    <div class="stat-card-icon bg-primary bg-opacity-10 text-primary mb-3">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h6 class="text-uppercase text-muted fw-bold small mb-1">Total Livres</h6>
+                    <h3 class="fw-bold mb-0" th:text="${totalBooks}">0</h3>
+                    <a href="/livres" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Members -->
+        <div class="col-md-3">
+            <div class="card h-100 border-0">
+                <div class="card-body p-4">
+                    <div class="stat-card-icon bg-success bg-opacity-10 text-success mb-3">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h6 class="text-uppercase text-muted fw-bold small mb-1">Membres Actifs</h6>
+                    <h3 class="fw-bold mb-0" th:text="${activeMembers}">0</h3>
+                    <a href="/membres" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Loans -->
+        <div class="col-md-3">
+            <div class="card h-100 border-0">
+                <div class="card-body p-4">
+                    <div class="stat-card-icon bg-info bg-opacity-10 text-info mb-3">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+                    <h6 class="text-uppercase text-muted fw-bold small mb-1">Emprunts en cours</h6>
+                    <h3 class="fw-bold mb-0" th:text="${currentLoans}">0</h3>
+                    <a href="/emprunts?statut=EN_COURS" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overdue Loans -->
+        <div class="col-md-3">
+            <div class="card h-100 border-0">
+                <div class="card-body p-4">
+                    <div class="stat-card-icon bg-danger bg-opacity-10 text-danger mb-3">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                    <h6 class="text-uppercase text-muted fw-bold small mb-1">Retards</h6>
+                    <h3 class="fw-bold mb-0" th:text="${overdueLoans}">0</h3>
+                    <a href="/emprunts?statut=EN_RETARD" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card bg-dark text-white overflow-hidden border-0 p-5 shadow-lg" style="border-radius: 2rem; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;">
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <h2 class="fw-bold mb-4">Gérez votre bibliothèque avec simplicité.</h2>
+                        <p class="text-secondary mb-4 opacity-75">Notre plateforme moderne vous permet de suivre vos livres, membres et emprunts en quelques clics. Profitez d'une interface intuitive et performante.</p>
+                        <div class="d-flex gap-3">
+                            <a href="/emprunts/nouveau" class="btn btn-primary px-4">
+                                <i class="bi bi-plus-lg me-2"></i>Nouvel Emprunt
+                            </a>
+                            <a href="/livres/nouveau" class="btn btn-outline-light px-4">
+                                <i class="bi bi-plus-lg me-2"></i>Ajouter Livre
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-5 d-none d-md-block text-center">
+                        <i class="bi bi-mortarboard display-1 text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
