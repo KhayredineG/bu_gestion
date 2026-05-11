@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Suivi des Emprunts</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">Suivi des Emprunts</h2>
+            <p class="text-muted small mb-0">Surveillez les prêts en cours et gérez les retours.</p>
+        </div>
+        <a th:href="@{/emprunts/nouveau}" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-lg me-2"></i>Nouvel Emprunt
+        </a>
+    </div>
+
+    <!-- Filters Card -->
+    <div class="card border-0 mb-4 shadow-sm bg-white">
+        <div class="card-body p-3">
+            <form th:action="@{/emprunts}" method="get" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <span class="text-muted small fw-bold text-uppercase">Filtrer par :</span>
+                </div>
+                <div class="col-auto">
+                    <select name="statut" class="form-select form-select-sm border-0 bg-light" onchange="this.form.submit()">
+                        <option value="">Tous les statuts</option>
+                        <option th:each="s : ${statuts}" 
+                                th:value="${s}" 
+                                th:text="${s}" 
+                                th:selected="${s == statut}"></option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loans Table -->
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th class="ps-4">Livre & Membre</th>
+                    <th>Date Emprunt</th>
+                    <th>Échéance</th>
+                    <th>Statut</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="e : ${emprunts}" class="shadow-sm">
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-info bg-opacity-10 text-info rounded p-2 me-3">
+                                <i class="bi bi-arrow-left-right"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark" th:text="${e.livre.titre}">Titre</div>
+                                <small class="text-muted" th:text="${e.membre.nom + ' ' + e.membre.prenom}">Membre</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="small" th:text="${#temporals.format(e.dateEmprunt, 'dd/MM/yyyy')}">Date</td>
+                    <td class="small fw-medium" 
+                        th:classappend="${e.statut.name() == 'EN_RETARD' ? 'text-danger' : 'text-secondary'}"
+                        th:text="${#temporals.format(e.dateRetourPrevue, 'dd/MM/yyyy')}">Échéance</td>
+                    <td>
+                        <span th:if="${e.statut.name() == 'EN_COURS'}" class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill">
+                            En cours
+                        </span>
+                        <span th:if="${e.statut.name() == 'RENDU'}" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">
+                            Rendu
+                        </span>
+                        <span th:if="${e.statut.name() == 'EN_RETARD'}" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill">
+                            Retard
+                        </span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <a th:if="${e.statut.name() != 'RENDU'}" 
+                           th:href="@{'/emprunts/retourner/' + ${e.id}}" 
+                           class="btn btn-sm btn-success rounded-pill px-3 shadow-sm"
+                           onclick="return confirm('Confirmer le retour de ce livre ?')">
+                            <i class="bi bi-arrow-return-left me-1"></i> Rendre
+                        </a>
+                        <span th:if="${e.statut.name() == 'RENDU'}" class="text-muted small italic">
+                            Le <span th:text="${#temporals.format(e.dateRetourEffective, 'dd/MM/')}"></span>
+                        </span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(emprunts)}">
+                    <td colspan="5" class="text-center py-5">
+                        <p class="text-muted">Aucun emprunt enregistré pour le moment.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav th:if="${totalPages > 1}" class="mt-5">
+        <ul class="pagination justify-content-center gap-1">
+            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                <a class="page-link border-0 rounded-3 shadow-sm" th:href="@{/emprunts(page=${currentPage - 1}, statut=${statut})}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${currentPage == i ? 'active' : ''}">
+                <a class="page-link border-0 rounded-3 shadow-sm mx-1" th:href="@{/emprunts(page=${i}, statut=${statut})}" th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                <a class="page-link border-0 rounded-3 shadow-sm" th:href="@{/emprunts(page=${currentPage + 1}, statut=${statut})}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+</body>
+</html>

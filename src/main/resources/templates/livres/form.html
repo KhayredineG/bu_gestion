@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${livre.id == null ? 'Ajouter un Livre' : 'Modifier le Livre'}"></title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark" th:text="${livre.id == null ? 'Ajouter un Livre' : 'Modifier le Livre'}"></h2>
+        <p class="text-muted small">Remplissez les informations ci-dessous pour mettre à jour le catalogue.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <form th:action="@{/livres/enregistrer}" th:object="${livre}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold small text-uppercase">Titre de l'ouvrage</label>
+                                <input type="text" th:field="*{titre}" class="form-control" th:classappend="${#fields.hasErrors('titre')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:errors="*{titre}"></div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">Auteur</label>
+                                <input type="text" th:field="*{auteur}" class="form-control" th:classappend="${#fields.hasErrors('auteur')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:errors="*{auteur}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">Catégorie</label>
+                                <input type="text" th:field="*{categorie}" class="form-control" th:classappend="${#fields.hasErrors('categorie')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:errors="*{categorie}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">ISBN</label>
+                                <input type="text" th:field="*{isbn}" class="form-control" th:classappend="${#fields.hasErrors('isbn')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:errors="*{isbn}"></div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-uppercase">Quantité Totale</label>
+                                <input type="number" th:field="*{quantiteTotal}" class="form-control" min="1">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold small text-uppercase">Disponible</label>
+                                <input type="number" th:field="*{quantiteDisponible}" class="form-control" min="0">
+                                <small class="text-muted small">Auto-calculé au prêt</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-3 pt-4 border-top">
+                            <a href="/livres" class="btn btn-light px-4">Annuler</a>
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                                <i class="bi bi-check-lg me-2"></i>Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Enregistrer un Emprunt</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark">Nouveau Prêt</h2>
+        <p class="text-muted small">Associez un livre à un membre pour créer un nouvel emprunt.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div th:if="${error}" class="alert alert-danger border-0 shadow-sm mb-4 fade show" role="alert">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i> <span th:text="${error}"></span>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <form th:action="@{/emprunts/enregistrer}" th:object="${emprunt}" method="post">
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase">Livre à emprunter</label>
+                            <select th:field="*{livre.id}" class="form-select bg-light border-0 py-3 px-4 shadow-none" required>
+                                <option value="">-- Sélectionner un ouvrage disponible --</option>
+                                <option th:each="l : ${livres}" 
+                                        th:value="${l.id}" 
+                                        th:text="${l.titre + ' [' + l.auteur + '] - ' + l.quantiteDisponible + ' dispo'}"
+                                        th:disabled="${l.quantiteDisponible <= 0}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase">Membre emprunteur</label>
+                            <select th:field="*{membre.id}" class="form-select bg-light border-0 py-3 px-4 shadow-none" required>
+                                <option value="">-- Sélectionner un membre actif --</option>
+                                <option th:each="m : ${membres}" 
+                                        th:value="${m.id}" 
+                                        th:text="${m.nom + ' ' + m.prenom + ' (' + m.email + ')'}"
+                                        th:disabled="${!m.actif}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase">Date de Retour Prévue</label>
+                            <input type="date" th:field="*{dateRetourPrevue}" class="form-control bg-light border-0 py-3 px-4 shadow-none" required>
+                            <div class="form-text text-muted small mt-2">
+                                <i class="bi bi-info-circle me-1"></i>La durée standard est de 14 jours.
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-3 pt-4 border-top mt-5">
+                            <a href="/emprunts" class="btn btn-light px-4">Annuler</a>
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                                <i class="bi bi-check-lg me-2"></i>Confirmer le Prêt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
