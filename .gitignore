@@ -1,6 +1,6 @@
 target/
 .vscode/
-readme.md
+ARCHITECTURE.md
 startup_log.txt
 data/
 .DS_Store
