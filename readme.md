@@ -44,4 +44,3 @@ A modern, robust, and secure web application for managing university libraries, 
    - **Default User:** `user` / `user123`
 
 ---
-*Developed as part of a University Project.*
