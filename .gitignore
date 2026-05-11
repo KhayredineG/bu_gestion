@@ -1,0 +1,9 @@
+target/
+.vscode/
+readme.md
+startup_log.txt
+data/
+.DS_Store
+*.log
+.idea/
+*.iml
